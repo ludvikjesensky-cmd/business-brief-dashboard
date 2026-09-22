@@ -66,6 +66,7 @@ function sendJson(res, status, data) {
 async function queryDashboard() {
   const client = await pool.connect();
   try {
+    await client.query('set role brief_dashboard');
     await client.query('begin read only');
     const [kpis, editions, findings, articles, activity] = await Promise.all([
       client.query('select * from brief.dashboard_kpis'),
@@ -96,6 +97,7 @@ async function queryDashboard() {
     await client.query('rollback').catch(() => {});
     throw error;
   } finally {
+    await client.query('reset role').catch(() => {});
     client.release();
   }
 }
