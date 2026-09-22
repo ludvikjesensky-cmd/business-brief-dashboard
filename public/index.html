@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Business Brief Control Room</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">BUSINESS BRIEF</div>
+        <h1>Control Room</h1>
+      </div>
+      <div class="live-block">
+        <span class="live-dot"></span>
+        <span>LIVE</span>
+        <span id="updated" class="muted">načítám…</span>
+      </div>
+    </header>
+
+    <section class="kpis" id="kpis"></section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">PIPELINE</div>
+          <h2 id="edition-heading">Aktuální vydání</h2>
+        </div>
+        <button id="refresh" class="button">Obnovit</button>
+      </div>
+      <div id="editions" class="edition-grid"></div>
+    </section>
+
+    <div class="split-grid">
+      <section class="section panel">
+        <div class="section-head compact">
+          <div>
+            <div class="eyebrow">REVIEW</div>
+            <h2>Findings</h2>
+          </div>
+          <span id="finding-count" class="count-pill"></span>
+        </div>
+        <div id="findings" class="list"></div>
+      </section>
+
+      <section class="section panel">
+        <div class="section-head compact">
+          <div>
+            <div class="eyebrow">ACTIVITY</div>
+            <h2>Poslední události</h2>
+          </div>
+        </div>
+        <div id="activity" class="timeline"></div>
+      </section>
+    </div>
+
+    <section class="section panel">
+      <div class="section-head compact">
+        <div>
+          <div class="eyebrow">ARTICLES</div>
+          <h2>Nejnovější články</h2>
+        </div>
+        <span id="article-count" class="count-pill"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Zdroj</th>
+              <th>Článek</th>
+              <th>Strany</th>
+              <th>Revize</th>
+              <th>Text</th>
+              <th>Stav</th>
+            </tr>
+          </thead>
+          <tbody id="articles"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      Read-only dashboard · data ze Supabase PostgreSQL · automatický refresh
+    </footer>
+  </div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
