@@ -14,7 +14,7 @@ Read-only dashboard pro sledování pipeline Business Brief.
 
 ## Architektura
 
-Dashboard je záměrně read-only. Server se připojuje přímo do PostgreSQL pod samostatným read-only loginem, který má pouze SELECT na view:
+Dashboard je záměrně read-only. Railway předá serveru existující omezené PostgreSQL spojení, ale každá dashboard query nejdřív provede `SET ROLE brief_dashboard`. Tato role má pouze SELECT na view:
 
 - `brief.dashboard_editions`
 - `brief.dashboard_findings`
@@ -55,7 +55,7 @@ Server poslouchá na `PORT`.
 ## Bezpečnost
 
 - dashboard nepoužívá `SUPABASE_SECRET_KEY`;
-- používá samostatný read-only DB login;
+- před každou dashboard query přepíná DB session na samostatnou read-only roli `brief_dashboard`;
 - všechny SQL view jsou spravované v hlavním `business-brief` repo;
 - UI nemá žádné mutation endpointy;
 - Basic Auth je první interní ochranná vrstva.
