@@ -15,14 +15,35 @@ function n(value) {
   return Number.isFinite(number) ? number : 0;
 }
 
-function formatDate(date) {
-  if (!date) return '—';
-  return new Intl.DateTimeFormat('cs-CZ', { day:'2-digit', month:'2-digit', year:'numeric' }).format(new Date(`${date}T12:00:00`));
+function dateKey(value) {
+  if (!value) return null;
+
+  if (typeof value === 'string') {
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) return `${match[1]}-${match[2]}-${match[3]}`;
+  }
+
+  const parsed = new Date(value);
+  if (!Number.isFinite(parsed.getTime())) return null;
+
+  const year = parsed.getUTCFullYear();
+  const month = String(parsed.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(parsed.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function formatDate(value) {
+  const key = dateKey(value);
+  if (!key) return '—';
+  const [year, month, day] = key.split('-');
+  return `${day}. ${month}. ${year}`;
 }
 
 function formatTime(ts) {
   if (!ts) return '—';
-  return new Intl.DateTimeFormat('cs-CZ', { hour:'2-digit', minute:'2-digit', second:'2-digit' }).format(new Date(ts));
+  const parsed = new Date(ts);
+  if (!Number.isFinite(parsed.getTime())) return '—';
+  return new Intl.DateTimeFormat('cs-CZ', { hour:'2-digit', minute:'2-digit', second:'2-digit' }).format(parsed);
 }
 
 function formatDuration(seconds) {
@@ -63,7 +84,7 @@ function stageProgress(e) {
 }
 
 function latestDate(editions) {
-  return editions.map(e => e.publication_date).filter(Boolean).sort().at(-1) || null;
+  return editions.map(e => dateKey(e.publication_date)).filter(Boolean).sort().at(-1) || null;
 }
 
 function metric(obj, ...keys) {
@@ -210,10 +231,10 @@ async function load() {
     document.querySelectorAll('.error-banner').forEach(n => n.remove());
 
     const date = latestDate(data.editions || []);
-    const dayEditions = (data.editions || []).filter(e => e.publication_date === date);
-    const dayFindings = (data.findings || []).filter(f => f.publication_date === date);
-    const dayArticles = (data.articles || []).filter(a => a.publication_date === date);
-    const dayActivity = (data.activity || []).filter(a => a.publication_date === date);
+    const dayEditions = (data.editions || []).filter(e => dateKey(e.publication_date) === date);
+    const dayFindings = (data.findings || []).filter(f => dateKey(f.publication_date) === date);
+    const dayArticles = (data.articles || []).filter(a => dateKey(a.publication_date) === date);
+    const dayActivity = (data.activity || []).filter(a => dateKey(a.publication_date) === date);
 
     renderKpis(data, dayEditions, dayFindings, dayArticles);
     renderEditions(dayEditions, date);
