@@ -130,7 +130,7 @@ async function serveStatic(req, res) {
     const body = await fs.readFile(filePath);
     res.writeHead(200, {
       'Content-Type': contentTypes[path.extname(filePath)] || 'application/octet-stream',
-      'Cache-Control': pathname === '/index.html' ? 'no-store' : 'public, max-age=300',
+      'Cache-Control': 'no-store',
       'X-Content-Type-Options': 'nosniff',
       'Content-Security-Policy': "default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'",
     });
